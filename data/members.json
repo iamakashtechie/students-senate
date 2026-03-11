@@ -1,0 +1,292 @@
+{
+  "professors": [
+    {
+      "id": "prof-1",
+      "name": "Prof. Netai Chandra Dey",
+      "role": "President",
+      "department": "Department of Mining Engineering",
+      "profilePic": "",
+      "linkedIn": ""
+    },
+    {
+      "id": "prof-2",
+      "name": "Dr. Chandan Giri",
+      "role": "Executive President",
+      "department": "Department of Information Technology",
+      "profilePic": "",
+      "linkedIn": ""
+    }
+  ],
+  "executiveSecretariat": [
+    {
+      "id": "es-1",
+      "name": "Sarthi Singh",
+      "rollNo": "2022CSB057",
+      "role": "General Secretary",
+      "department": "Computer Science and Technology",
+      "year": "4th Year UG",
+      "profilePic": "",
+      "linkedIn": ""
+    },
+    {
+      "id": "es-2",
+      "name": "Anurag Rajesh Kumar Singh",
+      "rollNo": "2023AMB047",
+      "role": "Assistant General Secretary",
+      "department": "Aerospace Engineering and Applied Mechanics",
+      "year": "3rd Year UG",
+      "profilePic": "",
+      "linkedIn": ""
+    },
+    {
+      "id": "es-3",
+      "name": "Nikhil Kumar",
+      "rollNo": "2023MEB018",
+      "role": "Treasurer",
+      "department": "Mechanical Engineering",
+      "year": "3rd Year UG",
+      "profilePic": "",
+      "linkedIn": ""
+    },
+    {
+      "id": "es-4",
+      "name": "Arun Kumar",
+      "rollNo": "2023ETB008",
+      "role": "Auditor",
+      "department": "Electronics and Telecommunication Engineering",
+      "year": "3rd Year UG",
+      "profilePic": "",
+      "linkedIn": ""
+    }
+  ],
+  "generalCouncil": [
+    {
+      "id": "gc-1",
+      "name": "Varun Gautam",
+      "department": "Mechanical Engineering",
+      "rollNo": "2022meb062"
+    },
+    {
+      "id": "gc-2",
+      "name": "Ruman Paul",
+      "department": "Electrical Engineering",
+      "rollNo": "2022eeb002"
+    },
+    {
+      "id": "gc-3",
+      "name": "Shubh Ashutosh",
+      "department": "Metallurgy and Materials Engineering",
+      "rollNo": "2022mmb032"
+    },
+    {
+      "id": "gc-4",
+      "name": "Rayan Maity",
+      "department": "Civil Engineering",
+      "rollNo": "2022ceb064"
+    },
+    {
+      "id": "gc-5",
+      "name": "Sarthi Singh",
+      "department": "Computer Science and Technology",
+      "rollNo": "2022csb057"
+    },
+    {
+      "id": "gc-6",
+      "name": "Navonil Chatterjee",
+      "department": "Aerospace Engineering and Applied Mechanics",
+      "rollNo": "2022amb016"
+    },
+    {
+      "id": "gc-7",
+      "name": "Shashwat Pandey",
+      "department": "Information Technology",
+      "rollNo": "2022itb075"
+    },
+    {
+      "id": "gc-8",
+      "name": "Utkarsh Kumar Mishra",
+      "department": "Mining Engineering",
+      "rollNo": "2022mnb013"
+    },
+    {
+      "id": "gc-9",
+      "name": "Tamojeet Das",
+      "department": "Electronics and Telecommunication Engineering",
+      "rollNo": "2022etb040"
+    },
+    {
+      "id": "gc-10",
+      "name": "Adarsh Dhanraj Panchbhai",
+      "department": "Architecture and Planning",
+      "rollNo": "2023apb008"
+    },
+    {
+      "id": "gc-11",
+      "name": "Ardhendu Das",
+      "department": "Chemical Engineering (CHST)",
+      "rollNo": "2023hcp002"
+    },
+    {
+      "id": "gc-12",
+      "name": "Anshuman Khuntia",
+      "department": "Earth Sciences",
+      "rollNo": "2024esm002"
+    },
+    {
+      "id": "gc-13",
+      "name": "Swati Kumari",
+      "department": "SOCSAT",
+      "rollNo": "2024ctm014"
+    },
+    {
+      "id": "gc-14",
+      "name": "Anshuman Vikram",
+      "department": "School of Mechatronics and Robotics",
+      "rollNo": "2021mcp001"
+    },
+    {
+      "id": "gc-15",
+      "name": "Somnath Majumder",
+      "department": "Physics",
+      "rollNo": "2021php002"
+    },
+    {
+      "id": "gc-16",
+      "name": "Suvetha R",
+      "department": "Chemistry",
+      "rollNo": "2024CHM003"
+    },
+    {
+      "id": "gc-17",
+      "name": "Subhankar Mondal",
+      "department": "SAMGRESS",
+      "rollNo": "2022mgp001"
+    },
+    {
+      "id": "gc-18",
+      "name": "Dharshan Dhandu",
+      "department": "School of VLSI Technology",
+      "rollNo": "2025vlm006"
+    },
+    {
+      "id": "gc-19",
+      "name": "Arijit Malakar",
+      "department": "Mathematics",
+      "rollNo": "2023map007"
+    },
+    {
+      "id": "gc-20",
+      "name": "Rohan Ghosal",
+      "department": "School of Management Sciences",
+      "rollNo": "2024msm012"
+    },
+    {
+      "id": "gc-21",
+      "name": "Sanjay Kumar Paira",
+      "department": "Humanities and Social Sciences",
+      "rollNo": "2023hhp002"
+    },
+    {
+      "id": "gc-22",
+      "name": "Aditya Raj Verma",
+      "department": "SCAGE",
+      "rollNo": "2023ceb113"
+    },
+    {
+      "id": "gc-23",
+      "name": "Arun Kumar",
+      "department": "Animal Welfare",
+      "rollNo": "2023etb008"
+    },
+    {
+      "id": "gc-24",
+      "name": "Nikhil Kumar",
+      "department": "Catharsis",
+      "rollNo": "2023meb018"
+    },
+    {
+      "id": "gc-25",
+      "name": "Akash Chandra Moulik",
+      "department": "Indian Knowledge System",
+      "rollNo": "2022ceb046"
+    },
+    {
+      "id": "gc-26",
+      "name": "Yasharth Shukla",
+      "department": "CodeIIEST",
+      "rollNo": "2023csb107"
+    },
+    {
+      "id": "gc-27",
+      "name": "Pratyush Dhital",
+      "department": "Robodarshan",
+      "rollNo": "2023csb101"
+    },
+    {
+      "id": "gc-28",
+      "name": "Rishikesh Vikas Pote",
+      "department": "Reflexobeta",
+      "rollNo": "2023itb074"
+    },
+    {
+      "id": "gc-29",
+      "name": "Hitesh Choumal",
+      "department": "Society of Games and Sports",
+      "rollNo": "2022ceb129"
+    },
+    {
+      "id": "gc-30",
+      "name": "Subhrajit Deb",
+      "department": "Vivekananda Youth Circle",
+      "rollNo": "2022csb032"
+    },
+    {
+      "id": "gc-31",
+      "name": "Shreyansh Srivastava",
+      "department": "EDC",
+      "rollNo": "2022csb043"
+    },
+    {
+      "id": "gc-32",
+      "name": "Madhire Kalyan Sathwik",
+      "department": "Camerabuff",
+      "rollNo": "2022csb055"
+    },
+    {
+      "id": "gc-33",
+      "name": "Animesh Vijay Bawane",
+      "department": "QuizManiac",
+      "rollNo": "2022csb002"
+    },
+    {
+      "id": "gc-34",
+      "name": "Anurag Rajesh Kumar Singh",
+      "department": "DebSoc",
+      "rollNo": "2023amb047"
+    },
+    {
+      "id": "gc-35",
+      "name": "Sayan Dutta",
+      "department": "LitSoC",
+      "rollNo": "2023eeb072"
+    },
+    {
+      "id": "gc-36",
+      "name": "Adity Mondal",
+      "department": "Euphony",
+      "rollNo": "2022eeb004"
+    },
+    {
+      "id": "gc-37",
+      "name": "Ashutosh Kumar Dubey",
+      "department": "Les Thespians",
+      "rollNo": "2023itb107"
+    },
+    {
+      "id": "gc-38",
+      "name": "Aseem Singh",
+      "department": "ENSAFE",
+      "rollNo": "2022eeb097"
+    }
+  ]
+}
