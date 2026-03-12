@@ -1,16 +1,17 @@
 // path: app/api/members/[id]/route.js
 import { NextResponse } from "next/server";
 import { getMembers, saveMembers } from "@/lib/dataStore";
+import { validateSession } from "@/lib/sessions";
 
 // delete a member by id from any section
 export async function DELETE(request, { params }) {
   const adminKey = request.headers.get("x-admin-key");
-  if (adminKey !== process.env.ADMIN_KEY) {
+  if (!validateSession(adminKey)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const { id } = params;
-  const members = getMembers();
+  const { id } = await params;
+  const members = await getMembers();
 
   let found = false;
 
@@ -31,6 +32,10 @@ export async function DELETE(request, { params }) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
-  saveMembers(members);
+  try {
+    await saveMembers(members);
+  } catch {
+    return NextResponse.json({ error: "failed to save data" }, { status: 500 });
+  }
   return NextResponse.json({ success: true });
 }

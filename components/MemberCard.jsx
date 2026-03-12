@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 // member card used in the about page
 export default function MemberCard({ member, variant = "default" }) {
   const { name, role, department, profilePic, linkedIn, rollNo } = member;
@@ -5,12 +7,14 @@ export default function MemberCard({ member, variant = "default" }) {
   if (variant === "professor") {
     return (
       <div className="bg-primary text-cream p-5 flex flex-col items-center text-center gap-3 hover:bg-primary-dark transition-colors">
-        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary bg-secondary/30">
+        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary bg-secondary/30 relative">
           {profilePic ? (
-            <img
+            <Image
               src={profilePic}
               alt={name}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="80px"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-2xl font-display font-bold text-cream">
@@ -44,12 +48,14 @@ export default function MemberCard({ member, variant = "default" }) {
   if (variant === "student") {
     return (
       <div className="flex flex-col items-center text-center group">
-        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary bg-secondary/30 group-hover:border-accent transition-colors">
+        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-secondary bg-secondary/30 group-hover:border-accent transition-colors relative">
           {profilePic ? (
-            <img
+            <Image
               src={profilePic}
               alt={name}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="80px"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-2xl font-display font-bold text-primary">

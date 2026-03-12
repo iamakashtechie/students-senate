@@ -18,8 +18,8 @@ function groupByMonth(notifications) {
   }, {});
 }
 
-export default function NotificationsPage() {
-  const notifications = getNotifications().sort(
+export default async function NotificationsPage() {
+  const notifications = (await getNotifications()).sort(
     (a, b) => new Date(b.date) - new Date(a.date),
   );
   const grouped = groupByMonth(notifications);

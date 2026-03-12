@@ -1,12 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getNotifications } from "@/lib/dataStore";
 import { getResolution } from "@/lib/dataStore";
 import NotificationCard from "@/components/NotificationCard";
 
 // home page is a server component so data is fetched at request time
-export default function HomePage() {
-  const notifications = getNotifications().slice(0, 5);
-  const resolution = getResolution();
+export default async function HomePage() {
+  const notifications = (await getNotifications()).slice(0, 5);
+  const resolution = await getResolution();
 
   return (
     <>
@@ -59,10 +60,13 @@ export default function HomePage() {
 
           {/* clock tower image */}
           <div className="hidden md:flex flex-1 justify-end items-end relative h-96">
-            <img
+            <Image
               src="/assets/imgs/IIEST_Shibpur_Clock.png"
               alt="IIEST Shibpur Clock Tower"
+              width={400}
+              height={600}
               className="h-full object-contain object-bottom"
+              priority
             />
             {/* decorative secondary box behind image */}
             <div className="absolute bottom-0 right-0 w-4/5 h-3/4 bg-secondary/20 -z-10 rounded-tl-2xl" />

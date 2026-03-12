@@ -2,10 +2,11 @@
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { getNotifications, saveNotifications } from "@/lib/dataStore";
+import { validateSession } from "@/lib/sessions";
 
 // get all notifications sorted newest first
 export async function GET() {
-  const notifications = getNotifications();
+  const notifications = await getNotifications();
   const sorted = [...notifications].sort(
     (a, b) => new Date(b.date) - new Date(a.date),
   );
@@ -16,7 +17,7 @@ export async function GET() {
 // supports multipart form data for file attachments
 export async function POST(request) {
   const adminKey = request.headers.get("x-admin-key");
-  if (adminKey !== process.env.ADMIN_KEY) {
+  if (!validateSession(adminKey)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -36,12 +37,30 @@ export async function POST(request) {
 
   const attachments = [];
 
+  const ALLOWED_EXTENSIONS = ["pdf", "png", "jpg", "jpeg", "webp", "gif"];
+
   // process uploaded files
   const files = formData.getAll("files");
   for (const file of files) {
     if (file && file.name) {
-      const buffer = Buffer.from(await file.arrayBuffer());
       const ext = file.name.split(".").pop().toLowerCase();
+
+      if (!ALLOWED_EXTENSIONS.includes(ext)) {
+        return NextResponse.json(
+          { error: `file type .${ext} is not allowed` },
+          { status: 400 },
+        );
+      }
+
+      const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+      if (file.size > MAX_FILE_SIZE) {
+        return NextResponse.json(
+          { error: `file too large. maximum size is 10 MB` },
+          { status: 400 },
+        );
+      }
+
+      const buffer = Buffer.from(await file.arrayBuffer());
       const filename = `${uuidv4()}.${ext}`;
       const filePath = `public/uploads/${filename}`;
 
@@ -69,9 +88,13 @@ export async function POST(request) {
     attachments,
   };
 
-  const notifications = getNotifications();
+  const notifications = await getNotifications();
   notifications.unshift(notification);
-  saveNotifications(notifications);
+  try {
+    await saveNotifications(notifications);
+  } catch {
+    return NextResponse.json({ error: "failed to save notification" }, { status: 500 });
+  }
 
   return NextResponse.json(notification, { status: 201 });
 }

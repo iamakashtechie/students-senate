@@ -8,13 +8,37 @@ export default function AdminPage() {
   const [key, setKey] = useState(null);
   const [tab, setTab] = useState("notifications");
 
-  // restore key from session on mount
+  // rehydrate session key on mount (client-only)
   useEffect(() => {
-    const saved = sessionStorage.getItem("admin_key");
-    if (saved) setKey(saved);
+    const stored = sessionStorage.getItem("admin_key");
+    if (stored) setKey(stored);
   }, []);
 
-  function handleLogout() {
+  // invalidate session on tab/browser close
+  useEffect(() => {
+    const handleUnload = () => {
+      const k = sessionStorage.getItem("admin_key");
+      if (k) {
+        navigator.sendBeacon(
+          "/api/admin/logout",
+          new Blob([JSON.stringify({ token: k })], {
+            type: "application/json",
+          }),
+        );
+      }
+    };
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, []);
+
+  async function handleLogout() {
+    const k = sessionStorage.getItem("admin_key");
+    if (k) {
+      await fetch("/api/admin/logout", {
+        method: "POST",
+        headers: { "x-admin-key": k },
+      });
+    }
     sessionStorage.removeItem("admin_key");
     setKey(null);
   }
@@ -161,7 +185,9 @@ function NotificationsPanel({ adminKey }) {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    loadNotifications();
+    fetch("/api/notifications")
+      .then((r) => r.json())
+      .then((data) => setNotifications(data));
   }, []);
 
   async function loadNotifications() {
@@ -201,10 +227,14 @@ function NotificationsPanel({ adminKey }) {
 
   async function handleDelete(id) {
     if (!confirm("delete this notification?")) return;
-    await fetch(`/api/notifications/${id}`, {
+    const res = await fetch(`/api/notifications/${id}`, {
       method: "DELETE",
       headers: { "x-admin-key": adminKey },
     });
+    if (!res.ok) {
+      setMsg("failed to delete notification.");
+      return;
+    }
     loadNotifications();
   }
 
@@ -324,7 +354,7 @@ function NotificationsPanel({ adminKey }) {
               </div>
               <button
                 onClick={() => handleDelete(n.id)}
-                className="font-body text-xs text-accent hover:underline flex-shrink-0 mt-0.5"
+                className="font-body text-xs text-accent hover:underline shrink-0 mt-0.5"
               >
                 Delete
               </button>
@@ -333,31 +363,6 @@ function NotificationsPanel({ adminKey }) {
         </div>
       </div>
 
-      <style jsx>{`
-        .admin-label {
-          display: block;
-          font-family: "DM Sans", sans-serif;
-          font-size: 0.7rem;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: rgba(87, 106, 143, 0.5);
-          margin-bottom: 0.25rem;
-        }
-        .admin-input {
-          display: block;
-          width: 100%;
-          border: 1px solid #b7bdf7;
-          padding: 0.5rem 0.75rem;
-          font-family: "DM Sans", sans-serif;
-          font-size: 0.875rem;
-          color: #576a8f;
-          background: #fff8de;
-          outline: none;
-        }
-        .admin-input:focus {
-          border-color: #576a8f;
-        }
-      `}</style>
     </div>
   );
 }
@@ -452,7 +457,9 @@ function MembersPanel({ adminKey }) {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    loadMembers();
+    fetch("/api/members")
+      .then((r) => r.json())
+      .then((data) => setMembers(data));
   }, []);
 
   async function loadMembers() {
@@ -482,10 +489,14 @@ function MembersPanel({ adminKey }) {
 
   async function handleDelete(id) {
     if (!confirm("remove this member?")) return;
-    await fetch(`/api/members/${id}`, {
+    const res = await fetch(`/api/members/${id}`, {
       method: "DELETE",
       headers: { "x-admin-key": adminKey },
     });
+    if (!res.ok) {
+      setMsg("failed to remove member.");
+      return;
+    }
     loadMembers();
   }
 
@@ -610,7 +621,7 @@ function MembersPanel({ adminKey }) {
               </div>
               <button
                 onClick={() => handleDelete(m.id)}
-                className="font-body text-xs text-accent hover:underline flex-shrink-0"
+                className="font-body text-xs text-accent hover:underline shrink-0"
               >
                 Remove
               </button>
@@ -618,32 +629,6 @@ function MembersPanel({ adminKey }) {
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        .admin-label {
-          display: block;
-          font-family: "DM Sans", sans-serif;
-          font-size: 0.7rem;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: rgba(87, 106, 143, 0.5);
-          margin-bottom: 0.25rem;
-        }
-        .admin-input {
-          display: block;
-          width: 100%;
-          border: 1px solid #b7bdf7;
-          padding: 0.5rem 0.75rem;
-          font-family: "DM Sans", sans-serif;
-          font-size: 0.875rem;
-          color: #576a8f;
-          background: #fff8de;
-          outline: none;
-        }
-        .admin-input:focus {
-          border-color: #576a8f;
-        }
-      `}</style>
     </div>
   );
 }

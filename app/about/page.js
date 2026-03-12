@@ -1,13 +1,14 @@
 import { getMembers } from "@/lib/dataStore";
 import MemberCard from "@/components/MemberCard";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
   title: "About Us | Students' Senate IIEST Shibpur",
 };
 
-export default function AboutPage() {
-  const members = getMembers();
+export default async function AboutPage() {
+  const members = await getMembers();
 
   return (
     <>
@@ -51,11 +52,13 @@ export default function AboutPage() {
               <p className="font-display italic text-cream/40 text-sm mb-2">
                 illustration
               </p>
-              <div className="w-full h-48 flex items-center justify-center">
+              <div className="w-full h-48 flex items-center justify-center relative">
                 {/* the actual hand-drawn images will be placed in public/assets/illustrations/ */}
-                <img
+                <Image
                   src="/assets/illustrations/sketch-1.jpeg"
                   alt="senate illustration"
+                  width={600}
+                  height={192}
                   className="max-h-full object-contain opacity-80"
                 />
                 <p className="font-display text-cream/20 text-6xl font-bold absolute">
@@ -103,9 +106,11 @@ export default function AboutPage() {
 
             {/* second illustration placeholder */}
             <div className="border border-cream/20 p-6 text-center bg-cream/5 mt-4">
-              <img
+              <Image
                 src="/assets/illustrations/sketch-2.jpeg"
                 alt="senate illustration 2"
+                width={400}
+                height={128}
                 className="max-h-32 object-contain mx-auto opacity-80"
               />
             </div>

@@ -1,14 +1,15 @@
 // path: app/api/resolution/route.js
 import { NextResponse } from "next/server";
 import { getResolution, saveResolution } from "@/lib/dataStore";
+import { validateSession } from "@/lib/sessions";
 
 export async function GET() {
-  return NextResponse.json(getResolution());
+  return NextResponse.json(await getResolution());
 }
 
 export async function PUT(request) {
   const adminKey = request.headers.get("x-admin-key");
-  if (adminKey !== process.env.ADMIN_KEY) {
+  if (!validateSession(adminKey)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -18,12 +19,17 @@ export async function PUT(request) {
     return NextResponse.json({ error: "text is required" }, { status: 400 });
   }
 
+  const existing = await getResolution();
   const resolution = {
     text: body.text,
-    year: body.year || getResolution().year,
+    year: body.year || existing.year,
     updatedAt: new Date().toISOString(),
   };
 
-  saveResolution(resolution);
+  try {
+    await saveResolution(resolution);
+  } catch {
+    return NextResponse.json({ error: "failed to save resolution" }, { status: 500 });
+  }
   return NextResponse.json(resolution);
 }

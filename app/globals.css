@@ -57,6 +57,14 @@ h3 {
   .section-label {
     @apply inline-block text-xs font-body font-medium tracking-widest uppercase bg-secondary text-primary px-3 py-1 mb-4;
   }
+
+  .admin-label {
+    @apply block font-body text-[0.7rem] uppercase tracking-wider text-primary/50 mb-1;
+  }
+
+  .admin-input {
+    @apply block w-full border border-secondary px-3 py-2 font-body text-sm text-primary bg-cream outline-none focus:border-primary;
+  }
 }
 
 /* Subtle noise texture overlay for depth */
