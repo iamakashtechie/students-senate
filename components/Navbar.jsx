@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
@@ -43,13 +44,17 @@ export default function Navbar() {
         scrolled ? "bg-cream shadow-[0_4px_0_0_#111111]" : "bg-cream"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <nav className="max-w-[1920px] mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
         {/* logo / brand */}
         <Link href="/" className="flex items-center gap-4 group">
-          <div className="w-12 h-12 bg-primary flex items-center justify-center border-2 border-primary group-hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_#111111]">
-            <span className="text-cream text-lg font-display font-bold">
-              SS
-            </span>
+          <div className="w-12 h-12 bg-cream flex items-center justify-center border-2 border-primary group-hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_#111111]">
+            <Image
+              src="/assets/imgs/Students_Senate_Logo.png"
+              alt="Students' Senate Logo"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
           </div>
           <span className="font-display font-extrabold text-lg leading-tight text-primary uppercase tracking-tighter">
             STUDENTS&apos;<br />SENATE
@@ -88,7 +93,7 @@ export default function Navbar() {
 
       {/* mobile dropdown */}
       {menuOpen && (
-        <div className="md:hidden bg-cream border-t-4 border-primary px-6 py-6 flex flex-col gap-4 shadow-[0_4px_0_0_#111111]">
+        <div className="md:hidden bg-cream border-t-4 border-primary px-4 py-6 flex flex-col gap-4 shadow-[0_4px_0_0_#111111]">
           {navLinks.map((link) => (
             <Link
               key={link.href}

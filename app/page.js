@@ -22,10 +22,10 @@ export default async function HomePage() {
           }} 
         />
         
-        <div className="relative z-10 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center gap-16 py-12">
+        <div className="relative z-10 px-4 md:px-12 lg:px-20 2xl:px-32 max-w-[1920px] mx-auto w-full flex flex-col lg:flex-row items-center gap-16 py-12">
           
           {/* Main Hero Card */}
-          <div className="flex-1 bg-cream p-8 md:p-12 lg:p-16 border-4 border-primary shadow-[16px_16px_0_0_#111111] relative">
+          <div className="flex-1 bg-cream p-6 md:p-12 lg:p-16 border-4 border-primary shadow-[16px_16px_0_0_#111111] relative">
             <div className="absolute -top-4 -left-4 bg-accent text-primary font-display font-black text-sm uppercase tracking-widest px-4 py-1 border-2 border-primary shadow-[4px_4px_0_0_#111]">
               Est. 1856
             </div>
@@ -34,7 +34,7 @@ export default async function HomePage() {
               IIEST Shibpur
             </p>
 
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-none uppercase tracking-tighter mb-8">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-none uppercase tracking-tighter mb-8 break-words">
               Students&apos;
               <br />
               <span className="relative inline-block mt-2">
@@ -81,9 +81,9 @@ export default async function HomePage() {
       </section>
 
       {/* resolution section */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 bg-primary text-cream border-b-8 border-primary-dark">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-cream text-primary p-8 md:p-16 border-4 border-cream shadow-[12px_12px_0_0_#cd7a47] relative">
+      <section className="py-24 px-4 md:px-12 lg:px-20 bg-primary text-cream border-b-8 border-primary-dark w-full overflow-hidden">
+        <div className="max-w-[1920px] 2xl:px-12 mx-auto">
+          <div className="bg-cream text-primary p-6 md:p-16 border-4 border-cream shadow-[12px_12px_0_0_#cd7a47] relative">
             
             {/* huge quotes decor */}
             <div className="absolute top-4 left-6 text-9xl font-display font-black text-secondary/30 pointer-events-none leading-none select-none">
@@ -115,8 +115,8 @@ export default async function HomePage() {
       </section>
 
       {/* what is the senate */}
-      <section className="py-32 px-6 md:px-12 lg:px-20 bg-cream border-b-8 border-primary overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <section className="py-32 px-4 md:px-12 lg:px-20 bg-cream border-b-8 border-primary overflow-hidden w-full">
+        <div className="max-w-[1920px] 2xl:px-12 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           
           {/* decorative visual block - brutalist abstraction */}
           <div className="relative order-2 lg:order-1 h-96 w-full max-w-md mx-auto">
@@ -140,7 +140,7 @@ export default async function HomePage() {
           {/* text */}
           <div className="order-1 lg:order-2">
             <span className="section-label">Organization</span>
-            <h2 className="font-display text-5xl md:text-7xl font-black text-primary uppercase tracking-tighter leading-none mb-8">
+            <h2 className="font-display text-4xl sm:text-5xl md:text-7xl font-black text-primary uppercase tracking-tighter leading-none mb-8 break-words">
               What is the
               <br />
               <span className="text-secondary">Senate?</span>
@@ -169,12 +169,12 @@ export default async function HomePage() {
       </section>
 
       {/* top notifications */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 bg-secondary border-b-8 border-primary">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-24 px-4 md:px-12 lg:px-20 bg-secondary border-b-8 border-primary w-full overflow-hidden">
+        <div className="max-w-[1920px] 2xl:px-12 mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-6 border-b-4 border-primary pb-6">
             <div>
               <span className="section-label bg-cream text-primary border-primary">Live</span>
-              <h2 className="font-display text-5xl md:text-7xl font-black text-cream uppercase tracking-tighter drop-shadow-[4px_4px_0_#111]">
+              <h2 className="font-display text-4xl sm:text-5xl md:text-7xl font-black text-cream uppercase tracking-tighter drop-shadow-[4px_4px_0_#111]">
                 Notices
               </h2>
             </div>

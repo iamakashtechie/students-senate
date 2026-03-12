@@ -29,14 +29,14 @@ export default async function NotificationsPage() {
   return (
     <div className="pt-20 bg-cream min-h-screen">
       {/* page header */}
-      <section className="relative py-24 px-6 md:px-12 lg:px-20 bg-primary border-b-8 border-primary-dark shadow-[0_12px_0_0_#111]">
+      <section className="relative py-24 px-4 md:px-12 lg:px-20 bg-primary border-b-8 border-primary-dark shadow-[0_12px_0_0_#111] w-full overflow-hidden">
         <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,_#fff_2px,_transparent_2px)] bg-[size:32px_32px]" />
         
-        <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <div className="relative z-10 max-w-[1920px] 2xl:px-12 mx-auto flex flex-col items-center text-center w-full">
           <div className="inline-block text-xs font-display font-black tracking-widest uppercase bg-accent text-primary px-4 py-2 mb-8 border-4 border-primary shadow-[4px_4px_0_0_#111] -rotate-2">
             Official Notice Board
           </div>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-cream leading-none tracking-tighter uppercase drop-shadow-[4px_4px_0_#111]">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-cream leading-none tracking-tighter uppercase drop-shadow-[4px_4px_0_#111] break-words">
             Notifications
           </h1>
           <div className="w-full max-w-2xl mx-auto mt-8 border-t-4 border-dashed border-cream/30 pt-6">
@@ -51,7 +51,7 @@ export default async function NotificationsPage() {
       </section>
 
       {/* notifications listing */}
-      <section className="py-24 px-6 md:px-12 lg:px-20">
+      <section className="py-24 px-4 md:px-12 lg:px-20 w-full overflow-hidden">
         <div className="max-w-5xl mx-auto">
           {notifications.length === 0 && (
             <div className="bg-cream border-4 border-primary p-16 text-center shadow-[16px_16px_0_0_#111]">

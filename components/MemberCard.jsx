@@ -8,19 +8,13 @@ export default function MemberCard({ member, variant = "default" }) {
     return (
       <div className="brutalist-card p-6 flex flex-col items-center text-center gap-4 group">
         <div className="w-24 h-24 overflow-hidden border-4 border-primary bg-secondary/30 shadow-[4px_4px_0_0_#111] relative group-hover:-translate-y-1 transition-transform">
-          {profilePic ? (
-            <Image
-              src={profilePic}
-              alt={name}
-              fill
-              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-              sizes="96px"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-3xl font-display font-black text-primary bg-cream">
-              {name.charAt(0)}
-            </div>
-          )}
+          <Image
+            src={profilePic || "/assets/imgs/person.jpg"}
+            alt={name}
+            fill
+            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+            sizes="96px"
+          />
         </div>
         <div>
           <p className="font-display font-black text-xl leading-tight uppercase tracking-tight mt-2">
@@ -49,19 +43,13 @@ export default function MemberCard({ member, variant = "default" }) {
     return (
       <div className="flex flex-col items-center text-center group">
         <div className="w-20 h-20 overflow-hidden border-2 border-primary bg-secondary/30 shadow-[4px_4px_0_0_#111] relative group-hover:-translate-y-1 transition-transform border-b-4">
-          {profilePic ? (
-            <Image
-              src={profilePic}
-              alt={name}
-              fill
-              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-              sizes="80px"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-2xl font-display font-black text-primary bg-cream">
-              {name.charAt(0)}
-            </div>
-          )}
+          <Image
+            src={profilePic || "/assets/imgs/person.jpg"}
+            alt={name}
+            fill
+            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+            sizes="80px"
+          />
         </div>
         <div className="mt-4 flex flex-col items-center">
           <p className="font-display font-bold text-base uppercase tracking-tight text-primary">{name}</p>
@@ -82,10 +70,14 @@ export default function MemberCard({ member, variant = "default" }) {
   // default: compact row for general council table
   return (
     <div className="flex items-center gap-4 py-3 border-b-2 border-primary/20 last:border-b-0 hover:bg-secondary/10 px-4 transition-colors group">
-      <div className="w-10 h-10 bg-cream border-2 border-primary flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0_0_#111] group-hover:-translate-y-0.5 duration-200">
-        <span className="text-sm font-display font-black text-primary">
-          {name.charAt(0)}
-        </span>
+      <div className="w-10 h-10 bg-cream border-2 border-primary flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0_0_#111] group-hover:-translate-y-0.5 duration-200 overflow-hidden relative">
+        <Image
+          src={profilePic || "/assets/imgs/person.jpg"}
+          alt={name}
+          fill
+          className="object-cover grayscale group-hover:grayscale-0"
+          sizes="40px"
+        />
       </div>
       <div className="flex-1 min-w-0 flex flex-col justify-center">
         <p className="font-display text-sm font-bold text-primary uppercase tracking-wider truncate">

@@ -23,10 +23,10 @@ export default async function AboutPage() {
           TRADITION
         </p>
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 lg:px-20 py-16">
-          <div className="bg-cream border-4 border-primary p-8 md:p-16 shadow-[16px_16px_0_0_#111] max-w-4xl">
+        <div className="relative z-10 max-w-[1920px] 2xl:px-12 mx-auto w-full px-4 md:px-12 lg:px-20 py-16">
+          <div className="bg-cream border-4 border-primary p-6 md:p-16 shadow-[16px_16px_0_0_#111] max-w-4xl">
             <span className="section-label bg-accent text-primary">About Us</span>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-none tracking-tighter uppercase mt-6 mb-4">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-none tracking-tighter uppercase mt-6 mb-4 break-words">
               Students&apos;<br />
               <span className="text-secondary border-b-8 border-secondary pb-2 inline-block mt-2">Senate</span>
             </h1>
@@ -40,8 +40,8 @@ export default async function AboutPage() {
       </section>
 
       {/* narrative description */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 bg-primary text-cream border-b-8 border-primary-dark">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24">
+      <section className="py-24 px-4 md:px-12 lg:px-20 bg-primary text-cream border-b-8 border-primary-dark w-full overflow-hidden">
+        <div className="max-w-[1920px] 2xl:px-12 mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24">
           
           {/* left: illustration block */}
           <div className="w-full lg:w-5/12 flex flex-col gap-12">
@@ -107,11 +107,11 @@ export default async function AboutPage() {
       </section>
 
       {/* executive secretariat */}
-      <section className="py-32 px-6 md:px-12 lg:px-20 bg-cream border-b-8 border-primary">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-32 px-4 md:px-12 lg:px-20 bg-cream border-b-8 border-primary w-full overflow-hidden">
+        <div className="max-w-[1920px] 2xl:px-12 mx-auto">
           <div className="mb-20 text-center">
             <span className="section-label">Leadership</span>
-            <h2 className="font-display text-5xl md:text-7xl font-black text-primary uppercase tracking-tighter mb-6">
+            <h2 className="font-display text-4xl sm:text-5xl md:text-7xl font-black text-primary uppercase tracking-tighter mb-6 break-words">
               Executive Secretariat
             </h2>
             <div className="inline-block bg-primary text-cream font-display font-bold text-sm uppercase tracking-widest px-6 py-2 border-4 border-primary shadow-[6px_6px_0_0_#111]">
@@ -156,12 +156,12 @@ export default async function AboutPage() {
       </section>
 
       {/* general council */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 bg-secondary/20 border-b-8 border-primary">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-24 px-4 md:px-12 lg:px-20 bg-secondary/20 border-b-8 border-primary w-full overflow-hidden">
+        <div className="max-w-[1920px] 2xl:px-12 mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-6">
             <div>
               <span className="section-label">Representatives</span>
-              <h2 className="font-display text-5xl md:text-6xl font-black text-primary uppercase tracking-tighter">
+              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-primary uppercase tracking-tighter break-words">
                 General Council
               </h2>
             </div>
@@ -189,8 +189,8 @@ export default async function AboutPage() {
       </section>
 
       {/* cta to notifications */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 bg-accent text-primary">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10 bg-cream p-12 lg:p-16 border-4 border-primary shadow-[16px_16px_0_0_#111]">
+      <section className="py-24 px-4 md:px-12 lg:px-20 bg-accent text-primary w-full overflow-hidden">
+        <div className="max-w-[1920px] 2xl:px-12 mx-auto flex flex-col md:flex-row items-center justify-between gap-10 bg-cream p-8 md:p-12 lg:p-16 border-4 border-primary shadow-[16px_16px_0_0_#111]">
           <div>
             <h3 className="font-display text-4xl md:text-5xl font-black uppercase tracking-tighter">Stay Informed</h3>
             <p className="font-body text-primary/80 font-bold uppercase tracking-widest text-sm md:text-base mt-4 max-w-lg leading-relaxed">

@@ -1,18 +1,23 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getResolution } from "@/lib/dataStore";
 
 export default async function Footer() {
   const resolution = await getResolution();
   return (
-    <footer className="bg-primary text-cream mt-auto border-t-8 border-primary-dark">
-      <div className="max-w-7xl mx-auto px-6 py-16">
+    <footer className="bg-primary text-cream mt-auto border-t-8 border-primary-dark w-full overflow-hidden">
+      <div className="max-w-[1920px] mx-auto px-4 md:px-6 2xl:px-12 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* brand column */}
           <div className="space-y-6">
             <div className="w-16 h-16 bg-cream flex items-center justify-center border-4 border-primary">
-              <span className="text-primary text-2xl font-display font-black tracking-tighter">
-                SS
-              </span>
+              <Image
+                src="/assets/imgs/Students_Senate_Logo.png"
+                alt="Students' Senate Logo"
+                width={56}
+                height={56}
+                className="object-contain"
+              />
             </div>
             <div>
               <h3 className="font-display text-3xl font-black text-cream uppercase mb-2 tracking-tight">
