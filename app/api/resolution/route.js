@@ -8,11 +8,6 @@ export async function GET() {
 }
 
 export async function PUT(request) {
-  const adminKey = request.headers.get("x-admin-key");
-  if (!validateSession(adminKey)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
-
   const body = await request.json();
 
   if (!body.text) {

@@ -35,5 +35,17 @@ export async function POST(request) {
   // successful login — clear the counter for this IP
   attempts.delete(ip);
   const token = createSession();
-  return NextResponse.json({ key: token });
+  
+  const response = NextResponse.json({ success: true });
+  response.cookies.set({
+    name: "admin_session",
+    value: token,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 2 * 60 * 60, // 2 hours
+    path: "/",
+  });
+
+  return response;
 }

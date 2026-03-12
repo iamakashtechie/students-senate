@@ -5,11 +5,6 @@ import { validateSession } from "@/lib/sessions";
 
 // delete a notification by id
 export async function DELETE(request, { params }) {
-  const adminKey = request.headers.get("x-admin-key");
-  if (!validateSession(adminKey)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
-
   const { id } = await params;
   let notifications = await getNotifications();
   const index = notifications.findIndex((n) => n.id === id);
@@ -31,11 +26,6 @@ export async function DELETE(request, { params }) {
 
 // patch to update a notification (toggle important, etc.)
 export async function PATCH(request, { params }) {
-  const adminKey = request.headers.get("x-admin-key");
-  if (!validateSession(adminKey)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
-
   const { id } = await params;
   const body = await request.json();
   let notifications = await getNotifications();

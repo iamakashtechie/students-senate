@@ -1,31 +1,21 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 @import "tailwindcss";
 
-/*@theme {
-  --color-primary: #576a8f;
-  --color-secondary: #b7bdf7;
-  --color-accent: #ff7444;
-  --color-cream: #fff8de;
-  --color-primary-dark: #3d4f6e;
-  --color-primary-light: #7a8fad;
-
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-body: "DM Sans", sans-serif;
-}*/
-
 @theme {
   /* Colors */
-  --color-primary: #0f172a; /* Deep slate/navy for high contrast */
-  --color-secondary: #64748b; /* Muted slate for secondary text/elements */
-  --color-accent: #2563eb; /* Professional royal blue for CTAs */
-  --color-cream: #f8fafc; /* Crisp off-white for clean backgrounds */
-  --color-primary-dark: #020617; /* Near black for deeper contrast/hover states */
-  --color-primary-light: #334155; /* Lighter slate for borders and subtle UI */
+  --color-primary: #111111; /* Brutalist ink */
+  --color-secondary: #c78860;
+  --color-accent: #cd7a47; /* Darkest terracotta */
+  --color-cream: #f4e3d8; /* Lightest from palette */
+  --color-sand: #dbac8f;
+  --color-brick: #cc916b;
+  --color-primary-dark: #000000;
+  --color-primary-light: #333333;
 
   /* Fonts */
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-body: "DM Sans", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
 }
 
 body {
@@ -36,56 +26,60 @@ body {
 
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
 }
 
-/* Components */
+/* Brutalist Components */
 @layer components {
   .btn-primary {
-    @apply bg-primary text-cream px-6 py-3 font-body font-medium tracking-wide transition-all duration-200 hover:bg-primary-dark;
+    @apply bg-primary text-cream px-6 py-3 font-display font-bold uppercase tracking-widest border-2 border-primary transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#111111] inline-block;
   }
 
   .btn-accent {
-    @apply bg-accent text-cream px-6 py-3 font-body font-medium tracking-wide transition-all duration-200 hover:opacity-90;
+    @apply bg-accent text-primary px-6 py-3 font-display font-bold uppercase tracking-widest border-2 border-primary transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#111111] inline-block;
   }
 
   .btn-outline {
-    @apply border-2 border-primary text-primary px-6 py-3 font-body font-medium tracking-wide transition-all duration-200 hover:bg-primary hover:text-cream;
+    @apply bg-cream text-primary px-6 py-3 font-display font-bold uppercase tracking-widest border-2 border-primary transition-all duration-200 hover:-translate-y-1 hover:bg-primary hover:text-cream hover:shadow-[4px_4px_0_0_#111111] inline-block;
+  }
+
+  .brutalist-card {
+    @apply bg-cream border-2 border-primary shadow-[6px_6px_0_0_#111111] transition-transform duration-200;
+  }
+  
+  .brutalist-card:hover {
+    @apply -translate-y-1 shadow-[8px_8px_0_0_#111111];
   }
 
   .section-label {
-    @apply inline-block text-xs font-body font-medium tracking-widest uppercase bg-secondary text-primary px-3 py-1 mb-4;
+    @apply inline-block text-xs font-display font-bold tracking-[0.2em] uppercase bg-primary text-cream px-3 py-1 mb-4 border-2 border-primary;
   }
 
   .admin-label {
-    @apply block font-body text-[0.7rem] uppercase tracking-wider text-primary/50 mb-1;
+    @apply block font-display text-[0.7rem] uppercase tracking-wider text-primary mb-1 font-bold;
   }
 
   .admin-input {
-    @apply block w-full border border-secondary px-3 py-2 font-body text-sm text-primary bg-cream outline-none focus:border-primary;
+    @apply block w-full border-2 border-primary px-3 py-2 font-body text-sm text-primary bg-cream outline-none focus:ring-0 focus:border-primary shadow-[4px_4px_0_0_#111111] transition-all focus:shadow-[2px_2px_0_0_#111111] focus:translate-y-[2px] focus:translate-x-[2px];
   }
 }
 
-/* Subtle noise texture overlay for depth */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
-}
-
-/* Scrollbar */
+/* Webkit Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 12px;
+  border-left: 2px solid var(--color-primary);
 }
 ::-webkit-scrollbar-track {
   background: var(--color-cream);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-primary);
-  border-radius: 3px;
+  border: 2px solid var(--color-cream);
 }

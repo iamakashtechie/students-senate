@@ -12,197 +12,197 @@ export default async function HomePage() {
   return (
     <>
       {/* hero section */}
-      <section className="relative min-h-screen flex flex-col justify-end overflow-hidden bg-primary">
-        {/* cream diagonal background shape */}
-        <div
-          className="absolute inset-0 bg-cream"
-          style={{ clipPath: "polygon(0 0, 55% 0, 35% 100%, 0 100%)" }}
+      <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden bg-sand border-b-8 border-primary pt-20">
+        {/* brutalist background pattern */}
+        <div 
+          className="absolute inset-0 opacity-10 pointer-events-none" 
+          style={{ 
+            backgroundImage: "linear-gradient(#111 2px, transparent 2px), linear-gradient(90deg, #111 2px, transparent 2px)", 
+            backgroundSize: "40px 40px" 
+          }} 
         />
-
-        {/* secondary accent bar top right */}
-        <div className="absolute top-0 right-0 w-1/2 h-2 bg-accent" />
-
-        {/* text block */}
-        <div className="relative z-10 px-8 md:px-16 lg:px-24 pb-20 pt-32 max-w-7xl mx-auto w-full flex flex-col md:flex-row items-end gap-10">
-          <div className="flex-1 max-w-xl">
-            {/* small institute logo placeholder */}
-            <div className="w-12 h-12 bg-accent mb-8 flex items-center justify-center">
-              <span className="text-cream font-display font-bold text-xs text-center leading-tight">
-                SS
-              </span>
+        
+        <div className="relative z-10 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center gap-16 py-12">
+          
+          {/* Main Hero Card */}
+          <div className="flex-1 bg-cream p-8 md:p-12 lg:p-16 border-4 border-primary shadow-[16px_16px_0_0_#111111] relative">
+            <div className="absolute -top-4 -left-4 bg-accent text-primary font-display font-black text-sm uppercase tracking-widest px-4 py-1 border-2 border-primary shadow-[4px_4px_0_0_#111]">
+              Est. 1856
             </div>
-
-            <p className="font-body text-sm md:text-base font-medium text-primary/70 mb-4 tracking-wide">
-              Indian Institute of Engineering Science and Technology, Shibpur
+            
+            <p className="font-display font-bold text-sm md:text-md uppercase tracking-widest text-primary/80 mb-6 border-b-2 border-primary pb-2 inline-block">
+              IIEST Shibpur
             </p>
 
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-none tracking-tight">
-              STUDENTS&apos;
+            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-none uppercase tracking-tighter mb-8">
+              Students&apos;
               <br />
-              <span className="text-accent">SENATE</span>
+              <span className="relative inline-block mt-2">
+                <span className="relative z-10 text-cream bg-primary px-2 py-1 border-4 border-primary">SENATE</span>
+                <span className="absolute top-2 left-2 w-full h-full bg-accent -z-10 border-4 border-primary" />
+              </span>
             </h1>
 
-            <p className="font-body text-sm text-primary/60 mt-6 leading-relaxed max-w-sm">
-              The elected body representing every student at IIEST Shibpur
-              &mdash; committed to transparency, welfare, and academic
-              excellence.
+            <p className="font-body text-base md:text-lg font-medium text-primary leading-relaxed max-w-xl mb-10 pl-6 border-l-8 border-accent">
+              The apex democratic body representing every student. 
+              Bridging the gap between the Students and the Council.
+              Committed to transparency and academic excellence.
             </p>
 
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Link href="/about" className="btn-primary">
+            <div className="flex flex-wrap gap-6">
+              <Link href="/about" className="btn-primary text-base md:text-lg">
                 About the Senate
               </Link>
-              <Link href="/notifications" className="btn-outline">
-                Notifications
+              <Link href="/notifications" className="btn-outline text-base md:text-lg">
+                Notice Board
               </Link>
             </div>
           </div>
 
-          {/* clock tower image */}
-          <div className="hidden md:flex flex-1 justify-end items-end relative h-96">
-            <Image
-              src="/assets/imgs/IIEST_Shibpur_Clock.png"
-              alt="IIEST Shibpur Clock Tower"
-              width={400}
-              height={600}
-              className="h-full object-contain object-bottom"
-              priority
-            />
-            {/* decorative secondary box behind image */}
-            <div className="absolute bottom-0 right-0 w-4/5 h-3/4 bg-secondary/20 -z-10 rounded-tl-2xl" />
+          {/* Image visual block */}
+          <div className="hidden lg:block w-full lg:w-5/12">
+            <div className="relative border-4 border-primary bg-primary p-4 shadow-[16px_16px_0_0_#111111] group">
+              <div className="relative w-full aspect-[3/4] border-4 border-primary overflow-hidden bg-cream">
+                <Image
+                  src="/assets/imgs/IIEST_Shibpur_Clock.png"
+                  alt="IIEST Shibpur Clock Tower"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover object-bottom grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700 hover:scale-105"
+                  priority
+                />
+              </div>
+              <div className="absolute -bottom-6 -right-6 bg-accent text-primary font-display font-black uppercase text-2xl tracking-tighter px-6 py-3 border-4 border-primary shadow-[8px_8px_0_0_#111]">
+                Clock Tower
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* bottom band */}
-        <div className="relative z-10 bg-primary w-full py-4 px-8 md:px-16 lg:px-24">
-          <p className="font-body text-xs text-cream/50 tracking-widest uppercase">
-            Academic Year 2025&ndash;26 &nbsp;&bull;&nbsp; Executive Secretariat
-            in session
-          </p>
         </div>
       </section>
 
       {/* resolution section */}
-      <section className="py-20 px-8 md:px-16 lg:px-24 bg-primary text-cream">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 items-start">
-          <div className="md:w-1/3">
-            <span className="section-label bg-secondary/20 text-secondary">
-              Resolution {resolution.year}
-            </span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold mt-2 leading-tight">
-              Our
-              <br />
-              <span className="text-accent">Resolve</span>
-            </h2>
-          </div>
-          <div className="md:w-2/3">
-            <p className="font-body text-lg leading-relaxed text-cream/80 italic border-l-4 border-accent pl-6">
-              &ldquo;{resolution.text}&rdquo;
-            </p>
-            <p className="font-body text-xs text-cream/40 mt-4">
-              {resolution.updatedAt
-                ? `Last updated ${new Date(resolution.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}`
-                : ""}
-            </p>
+      <section className="py-24 px-6 md:px-12 lg:px-20 bg-primary text-cream border-b-8 border-primary-dark">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-cream text-primary p-8 md:p-16 border-4 border-cream shadow-[12px_12px_0_0_#cd7a47] relative">
+            
+            {/* huge quotes decor */}
+            <div className="absolute top-4 left-6 text-9xl font-display font-black text-secondary/30 pointer-events-none leading-none select-none">
+              &ldquo;
+            </div>
+
+            <div className="relative z-10 flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
+              <div className="lg:w-1/3">
+                <div className="section-label bg-accent text-primary border-primary shadow-[4px_4px_0_0_#111]">
+                  Resolution {resolution.year}
+                </div>
+                <h2 className="font-display text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mt-4">
+                  Our<br />Resolve
+                </h2>
+              </div>
+              <div className="lg:w-2/3">
+                <p className="font-display text-xl md:text-3xl font-bold uppercase tracking-tight leading-snug border-l-8 border-primary pl-8 py-2">
+                  {resolution.text}
+                </p>
+                {resolution.updatedAt && (
+                  <div className="mt-8 font-display font-bold text-xs uppercase tracking-widest bg-primary text-cream px-3 py-1 inline-block border-2 border-primary">
+                    Updated {new Date(resolution.updatedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* what is the senate */}
-      <section className="py-24 px-8 md:px-16 lg:px-24">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          {/* decorative visual block */}
-          <div className="relative">
-            <div className="w-full aspect-square bg-secondary/20 rounded-sm relative overflow-hidden max-w-md">
-              <div className="absolute top-0 left-0 w-1/2 h-1 bg-accent" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center px-10">
-                  <p className="font-display text-7xl font-black text-primary/10">
-                    SS
-                  </p>
-                  <div className="mt-4 space-y-2">
-                    {[
-                      "Executive Secretariat",
-                      "General Council",
-                      "Academic Units",
-                      "Student Clubs",
-                    ].map((item) => (
-                      <div key={item} className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-accent flex-shrink-0" />
-                        <p className="font-body text-sm text-primary/60">
-                          {item}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+      <section className="py-32 px-6 md:px-12 lg:px-20 bg-cream border-b-8 border-primary overflow-hidden">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          
+          {/* decorative visual block - brutalist abstraction */}
+          <div className="relative order-2 lg:order-1 h-96 w-full max-w-md mx-auto">
+            <div className="absolute top-10 left-10 w-full h-full bg-secondary border-4 border-primary shadow-[12px_12px_0_0_#111]" />
+            <div className="absolute top-0 left-0 w-full h-full bg-accent border-4 border-primary flex items-center justify-center transition-transform hover:-translate-y-2 hover:-translate-x-2 duration-300">
+              <div className="bg-cream p-8 border-4 border-primary w-4/5 shadow-[8px_8px_0_0_#111]">
+                <p className="font-display text-5xl font-black uppercase text-center tracking-tighter mb-6 border-b-4 border-primary pb-4">
+                  Structures
+                </p>
+                <ul className="space-y-4 font-display font-bold text-sm uppercase tracking-widest text-primary">
+                  {["Executive Secretariat", "General Council", "Academic Units", "Student Clubs"].map((item) => (
+                    <li key={item} className="flex flex-col border-2 border-primary p-2 bg-cream hover:bg-primary hover:text-cream transition-colors cursor-default">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              {/* corner decorations */}
-              <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-primary/20" />
-              <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-primary/20" />
             </div>
           </div>
 
           {/* text */}
-          <div>
-            <span className="section-label">About the Senate</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-primary leading-tight mb-6">
+          <div className="order-1 lg:order-2">
+            <span className="section-label">Organization</span>
+            <h2 className="font-display text-5xl md:text-7xl font-black text-primary uppercase tracking-tighter leading-none mb-8">
               What is the
               <br />
-              Student Senate?
+              <span className="text-secondary">Senate?</span>
             </h2>
-            <p className="font-body text-base text-primary/70 leading-relaxed mb-4">
-              The Students&apos; Senate is the apex democratic body representing
-              all students of IIEST Shibpur. It comprises the Executive
-              Secretariat &mdash; nominated and elected members who oversee
-              governance &mdash; and the General Council, consisting of
-              representatives from every academic department, society, and club.
-            </p>
-            <p className="font-body text-base text-primary/70 leading-relaxed mb-8">
-              The Senate serves as the official interface between the student
-              community and the institute administration, advocating for student
-              welfare, academic reforms, and campus life improvements.
-            </p>
-            <Link href="/about" className="btn-primary inline-block">
-              Learn More &rarr;
+            <div className="space-y-6 font-body text-lg font-medium text-primary/90 leading-relaxed border-l-4 border-primary pl-6 mb-10">
+              <p>
+                The Students&apos; Senate is the apex democratic body representing
+                all students of IIEST Shibpur.
+              </p>
+              <p>
+                It comprises the Executive Secretariat &mdash; elected members who oversee
+                governance &mdash; and the General Council, consisting of
+                representatives from every academic department, society, and club.
+              </p>
+              <p>
+                The Senate serves as the official interface between the student
+                community and the institute administration, advocating for student
+                welfare, academic reforms, and campus life improvements.
+              </p>
+            </div>
+            <Link href="/about" className="btn-accent text-lg shadow-[6px_6px_0_0_#111] hover:shadow-[4px_4px_0_0_#111]">
+              Meet the Council &rarr;
             </Link>
           </div>
         </div>
       </section>
 
       {/* top notifications */}
-      <section className="py-20 px-8 md:px-16 lg:px-24 bg-secondary/10">
+      <section className="py-24 px-6 md:px-12 lg:px-20 bg-secondary border-b-8 border-primary">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-10">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-6 border-b-4 border-primary pb-6">
             <div>
-              <span className="section-label">Latest</span>
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-primary">
-                Notifications
+              <span className="section-label bg-cream text-primary border-primary">Live</span>
+              <h2 className="font-display text-5xl md:text-7xl font-black text-cream uppercase tracking-tighter drop-shadow-[4px_4px_0_#111]">
+                Notices
               </h2>
             </div>
             <Link
               href="/notifications"
-              className="font-body text-sm font-medium text-accent hover:underline hidden md:block"
+              className="btn-primary bg-cream text-primary border-4 hover:bg-primary hover:text-cream shadow-[6px_6px_0_0_#111]"
             >
-              View all &rarr;
+              View All Notices
             </Link>
           </div>
 
           {notifications.length === 0 ? (
-            <p className="font-body text-primary/50 text-sm">
-              no notifications at this time.
-            </p>
+            <div className="bg-cream border-4 border-primary p-12 text-center shadow-[12px_12px_0_0_#111]">
+              <p className="font-display font-bold text-2xl uppercase tracking-widest text-primary/50">
+                No active notifications.
+              </p>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {notifications.map((n) => (
                 <NotificationCard key={n.id} notification={n} />
               ))}
             </div>
           )}
 
-          <div className="mt-8 md:hidden">
-            <Link href="/notifications" className="btn-outline inline-block">
-              View all notifications &rarr;
+          <div className="mt-12 md:hidden">
+            <Link href="/notifications" className="btn-primary w-full text-center border-4">
+              View All &rarr;
             </Link>
           </div>
         </div>

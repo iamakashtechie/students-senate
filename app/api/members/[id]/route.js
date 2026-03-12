@@ -5,11 +5,6 @@ import { validateSession } from "@/lib/sessions";
 
 // delete a member by id from any section
 export async function DELETE(request, { params }) {
-  const adminKey = request.headers.get("x-admin-key");
-  if (!validateSession(adminKey)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
-
   const { id } = await params;
   const members = await getMembers();
 

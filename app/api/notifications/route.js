@@ -16,11 +16,6 @@ export async function GET() {
 // create a new notification
 // supports multipart form data for file attachments
 export async function POST(request) {
-  const adminKey = request.headers.get("x-admin-key");
-  if (!validateSession(adminKey)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
-
   const formData = await request.formData();
 
   const title = formData.get("title");

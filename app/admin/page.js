@@ -1,80 +1,51 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-// admin panel is fully client-side
-// authentication: password -> receive api key -> stored in sessionStorage
+// admin panel is fully client-side but protected by middleware
+// authentication happens via http-only cookies
 export default function AdminPage() {
-  const [key, setKey] = useState(null);
   const [tab, setTab] = useState("notifications");
-
-  // rehydrate session key on mount (client-only)
-  useEffect(() => {
-    const stored = sessionStorage.getItem("admin_key");
-    if (stored) setKey(stored);
-  }, []);
-
-  // invalidate session on tab/browser close
-  useEffect(() => {
-    const handleUnload = () => {
-      const k = sessionStorage.getItem("admin_key");
-      if (k) {
-        navigator.sendBeacon(
-          "/api/admin/logout",
-          new Blob([JSON.stringify({ token: k })], {
-            type: "application/json",
-          }),
-        );
-      }
-    };
-    window.addEventListener("beforeunload", handleUnload);
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, []);
+  const router = useRouter();
 
   async function handleLogout() {
-    const k = sessionStorage.getItem("admin_key");
-    if (k) {
-      await fetch("/api/admin/logout", {
-        method: "POST",
-        headers: { "x-admin-key": k },
-      });
-    }
-    sessionStorage.removeItem("admin_key");
-    setKey(null);
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
+    router.refresh();
   }
 
-  if (!key) {
-    return (
-      <LoginGate
-        onLogin={(k) => {
-          setKey(k);
-          sessionStorage.setItem("admin_key", k);
-        }}
-      />
-    );
+  // helper to pass to panels so they can intercept 401s if the session expires mid-edit
+  function handleApiError(res) {
+    if (res.status === 401) {
+      router.push("/admin/login");
+      router.refresh();
+      return true;
+    }
+    return false;
   }
 
   return (
     <div className="min-h-screen pt-16 bg-cream">
       {/* admin topbar */}
-      <div className="bg-primary text-cream px-8 py-4 flex items-center justify-between">
+      <div className="bg-primary text-cream px-8 py-4 flex items-center justify-between border-b-4 border-primary-dark">
         <div>
-          <h1 className="font-display font-bold text-lg">Admin Panel</h1>
-          <p className="font-body text-xs text-cream/50">
+          <h1 className="font-display font-black text-xl uppercase tracking-widest">Admin Panel</h1>
+          <p className="font-body text-xs font-bold text-cream/70 uppercase tracking-widest mt-1">
             Students&apos; Senate, IIEST Shibpur
           </p>
         </div>
         <button
           onClick={handleLogout}
-          className="font-body text-xs text-cream/60 hover:text-accent transition-colors border border-cream/20 px-3 py-1.5"
+          className="font-display font-bold text-xs uppercase tracking-widest text-primary bg-accent hover:bg-cream transition-colors border-2 border-primary px-4 py-2 shadow-[2px_2px_0_0_#111] hover:shadow-[1px_1px_0_0_#111] hover:translate-y-[1px] hover:translate-x-[1px]"
         >
           Logout
         </button>
       </div>
 
       {/* tabs */}
-      <div className="border-b border-secondary bg-cream sticky top-16 z-40">
-        <div className="max-w-6xl mx-auto px-8 flex gap-0">
+      <div className="border-b-4 border-primary bg-primary sticky top-16 z-40 shadow-[0_4px_0_0_#111]">
+        <div className="max-w-6xl mx-auto px-8 flex gap-2 pt-2">
           {[
             { id: "notifications", label: "Notifications" },
             { id: "resolution", label: "Resolution" },
@@ -83,10 +54,10 @@ export default function AdminPage() {
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`font-body text-sm font-medium px-5 py-4 border-b-2 transition-colors ${
+              className={`font-display text-sm font-bold uppercase tracking-widest px-6 py-3 border-t-2 border-l-2 border-r-2 border-b-0 transition-colors ${
                 tab === t.id
-                  ? "border-accent text-accent"
-                  : "border-transparent text-primary/50 hover:text-primary"
+                  ? "bg-cream text-primary border-primary"
+                  : "bg-primary text-cream border-transparent hover:bg-primary-light"
               }`}
             >
               {t.label}
@@ -97,82 +68,16 @@ export default function AdminPage() {
 
       {/* tab content */}
       <div className="max-w-6xl mx-auto px-8 py-10">
-        {tab === "notifications" && <NotificationsPanel adminKey={key} />}
-        {tab === "resolution" && <ResolutionPanel adminKey={key} />}
-        {tab === "members" && <MembersPanel adminKey={key} />}
-      </div>
-    </div>
-  );
-}
-
-/* login gate */
-function LoginGate({ onLogin }) {
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError("incorrect password.");
-        return;
-      }
-      onLogin(data.key);
-    } catch {
-      setError("network error, try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-cream pt-16">
-      <div className="w-full max-w-sm px-8 py-10 bg-white border border-secondary">
-        <h1 className="font-display text-2xl font-bold text-primary mb-1">
-          Admin Login
-        </h1>
-        <p className="font-body text-xs text-primary/50 mb-8">
-          Students&apos; Senate, IIEST Shibpur
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="font-body text-xs text-primary/60 uppercase tracking-wide block mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-secondary px-3 py-2 font-body text-sm text-primary bg-cream focus:outline-none focus:border-primary"
-              placeholder="enter admin password"
-            />
-          </div>
-          {error && <p className="font-body text-xs text-accent">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full btn-primary disabled:opacity-50"
-          >
-            {loading ? "verifying..." : "Sign In"}
-          </button>
-        </form>
+        {tab === "notifications" && <NotificationsPanel onApiError={handleApiError} />}
+        {tab === "resolution" && <ResolutionPanel onApiError={handleApiError} />}
+        {tab === "members" && <MembersPanel onApiError={handleApiError} />}
       </div>
     </div>
   );
 }
 
 /* notifications management panel */
-function NotificationsPanel({ adminKey }) {
+function NotificationsPanel({ onApiError }) {
   const [notifications, setNotifications] = useState([]);
   const [form, setForm] = useState({
     title: "",
@@ -210,9 +115,10 @@ function NotificationsPanel({ adminKey }) {
 
     const res = await fetch("/api/notifications", {
       method: "POST",
-      headers: { "x-admin-key": adminKey },
       body: fd,
     });
+
+    if (onApiError(res)) return;
 
     if (res.ok) {
       setMsg("notification added.");
@@ -229,8 +135,10 @@ function NotificationsPanel({ adminKey }) {
     if (!confirm("delete this notification?")) return;
     const res = await fetch(`/api/notifications/${id}`, {
       method: "DELETE",
-      headers: { "x-admin-key": adminKey },
     });
+    
+    if (onApiError(res)) return;
+    
     if (!res.ok) {
       setMsg("failed to delete notification.");
       return;
@@ -250,8 +158,9 @@ function NotificationsPanel({ adminKey }) {
           className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl"
         >
           <div className="md:col-span-2">
-            <label className="admin-label">Title *</label>
+            <label className="admin-label" htmlFor="notif-title">Title *</label>
             <input
+              id="notif-title"
               className="admin-input"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -259,8 +168,9 @@ function NotificationsPanel({ adminKey }) {
             />
           </div>
           <div>
-            <label className="admin-label">Date *</label>
+            <label className="admin-label" htmlFor="notif-date">Date *</label>
             <input
+              id="notif-date"
               type="date"
               className="admin-input"
               value={form.date}
@@ -282,8 +192,9 @@ function NotificationsPanel({ adminKey }) {
             </label>
           </div>
           <div className="md:col-span-2">
-            <label className="admin-label">Description</label>
+            <label className="admin-label" htmlFor="notif-desc">Description</label>
             <textarea
+              id="notif-desc"
               className="admin-input h-24 resize-none"
               value={form.description}
               onChange={(e) =>
@@ -292,8 +203,9 @@ function NotificationsPanel({ adminKey }) {
             />
           </div>
           <div className="md:col-span-2">
-            <label className="admin-label">Attachments (PDF or image)</label>
+            <label className="admin-label" htmlFor="notif-files">Attachments (PDF or image)</label>
             <input
+              id="notif-files"
               type="file"
               multiple
               accept=".pdf,image/*"
@@ -368,7 +280,7 @@ function NotificationsPanel({ adminKey }) {
 }
 
 /* resolution management panel */
-function ResolutionPanel({ adminKey }) {
+function ResolutionPanel({ onApiError }) {
   const [text, setText] = useState("");
   const [year, setYear] = useState("2025-26");
   const [saving, setSaving] = useState(false);
@@ -389,9 +301,12 @@ function ResolutionPanel({ adminKey }) {
     setMsg("");
     const res = await fetch("/api/resolution", {
       method: "PUT",
-      headers: { "Content-Type": "application/json", "x-admin-key": adminKey },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, year }),
     });
+    
+    if (onApiError(res)) return;
+    
     setMsg(res.ok ? "resolution updated." : "failed to update.");
     setSaving(false);
   }
@@ -403,20 +318,22 @@ function ResolutionPanel({ adminKey }) {
       </h2>
       <form onSubmit={handleSave} className="space-y-4">
         <div>
-          <label className="block font-body text-xs text-primary/50 uppercase tracking-wide mb-1">
+          <label className="block font-body text-xs text-primary/50 uppercase tracking-wide mb-1" htmlFor="res-year">
             Academic Year
           </label>
           <input
+            id="res-year"
             className="w-full border border-secondary px-3 py-2 font-body text-sm text-primary bg-cream focus:outline-none focus:border-primary"
             value={year}
             onChange={(e) => setYear(e.target.value)}
           />
         </div>
         <div>
-          <label className="block font-body text-xs text-primary/50 uppercase tracking-wide mb-1">
+          <label className="block font-body text-xs text-primary/50 uppercase tracking-wide mb-1" htmlFor="res-text">
             Resolution Text
           </label>
           <textarea
+            id="res-text"
             className="w-full border border-secondary px-3 py-2 font-body text-sm text-primary bg-cream focus:outline-none focus:border-primary h-48 resize-none"
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -439,7 +356,7 @@ function ResolutionPanel({ adminKey }) {
 }
 
 /* members management panel */
-function MembersPanel({ adminKey }) {
+function MembersPanel({ onApiError }) {
   const [members, setMembers] = useState({
     professors: [],
     executiveSecretariat: [],
@@ -474,9 +391,12 @@ function MembersPanel({ adminKey }) {
     setMsg("");
     const res = await fetch("/api/members", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-admin-key": adminKey },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form, section }),
     });
+    
+    if (onApiError(res)) return;
+    
     if (res.ok) {
       setMsg("member added.");
       setForm({ name: "", rollNo: "", role: "", department: "", year: "" });
@@ -491,8 +411,10 @@ function MembersPanel({ adminKey }) {
     if (!confirm("remove this member?")) return;
     const res = await fetch(`/api/members/${id}`, {
       method: "DELETE",
-      headers: { "x-admin-key": adminKey },
     });
+    
+    if (onApiError(res)) return;
+    
     if (!res.ok) {
       setMsg("failed to remove member.");
       return;
@@ -531,8 +453,9 @@ function MembersPanel({ adminKey }) {
           className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl"
         >
           <div>
-            <label className="admin-label">Section</label>
+            <label className="admin-label" htmlFor="member-section">Section</label>
             <select
+              id="member-section"
               className="admin-input"
               value={section}
               onChange={(e) => setSection(e.target.value)}
@@ -545,8 +468,9 @@ function MembersPanel({ adminKey }) {
             </select>
           </div>
           <div>
-            <label className="admin-label">Full Name *</label>
+            <label className="admin-label" htmlFor="member-name">Full Name *</label>
             <input
+              id="member-name"
               className="admin-input"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -554,24 +478,27 @@ function MembersPanel({ adminKey }) {
             />
           </div>
           <div>
-            <label className="admin-label">Roll No.</label>
+            <label className="admin-label" htmlFor="member-roll">Roll No.</label>
             <input
+              id="member-roll"
               className="admin-input"
               value={form.rollNo}
               onChange={(e) => setForm({ ...form, rollNo: e.target.value })}
             />
           </div>
           <div>
-            <label className="admin-label">Role / Post</label>
+            <label className="admin-label" htmlFor="member-role">Role / Post</label>
             <input
+              id="member-role"
               className="admin-input"
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
             />
           </div>
           <div>
-            <label className="admin-label">Department / Unit *</label>
+            <label className="admin-label" htmlFor="member-dept">Department / Unit *</label>
             <input
+              id="member-dept"
               className="admin-input"
               value={form.department}
               onChange={(e) => setForm({ ...form, department: e.target.value })}
@@ -579,8 +506,9 @@ function MembersPanel({ adminKey }) {
             />
           </div>
           <div>
-            <label className="admin-label">Year</label>
+            <label className="admin-label" htmlFor="member-year">Year</label>
             <input
+              id="member-year"
               className="admin-input"
               placeholder="e.g. 3rd Year UG"
               value={form.year}

@@ -1,5 +1,37 @@
 [
   {
+    "id": "notif-e955a67f-756f-4b37-9c22-6335e529e6b1",
+    "title": "endsem cazzed",
+    "description": "🎉🎉🎉",
+    "date": "2026-03-13",
+    "important": true,
+    "attachments": []
+  },
+  {
+    "id": "notif-3f683403-374c-4a5f-91d1-46c9d302524d",
+    "title": "test 7",
+    "description": "",
+    "date": "2026-03-13",
+    "important": false,
+    "attachments": []
+  },
+  {
+    "id": "notif-9483ce8c-4e1f-44eb-be8b-6d4cb1a2689b",
+    "title": "test 6",
+    "description": "test after new UI update",
+    "date": "2026-03-13",
+    "important": true,
+    "attachments": []
+  },
+  {
+    "id": "notif-bcc7c38b-f62d-490a-8763-b13ddcf0620d",
+    "title": "test 5",
+    "description": "checking new changes during development",
+    "date": "2026-03-13",
+    "important": false,
+    "attachments": []
+  },
+  {
     "id": "notif-eb9d6116-5e79-486e-a853-26557f83ffaf",
     "title": "test 4",
     "description": "is the issue fixed??",

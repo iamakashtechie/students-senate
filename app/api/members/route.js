@@ -10,11 +10,6 @@ export async function GET() {
 
 // add a new member to any section
 export async function POST(request) {
-  const adminKey = request.headers.get("x-admin-key");
-  if (!validateSession(adminKey)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
-
   const body = await request.json();
   const {
     name,
