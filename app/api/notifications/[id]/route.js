@@ -40,7 +40,14 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
-  notifications[index] = { ...notifications[index], ...body };
+  const { title, description, date, important } = body;
+  const updates = {};
+  if (title !== undefined) updates.title = title;
+  if (description !== undefined) updates.description = description;
+  if (date !== undefined) updates.date = date;
+  if (important !== undefined) updates.important = important;
+
+  notifications[index] = { ...notifications[index], ...updates };
   saveNotifications(notifications);
 
   return NextResponse.json(notifications[index]);

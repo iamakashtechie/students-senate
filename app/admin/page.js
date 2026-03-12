@@ -6,8 +6,6 @@ import { useState, useEffect } from "react";
 // authentication: password -> receive api key -> stored in sessionStorage
 export default function AdminPage() {
   const [key, setKey] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [tab, setTab] = useState("notifications");
 
   // restore key from session on mount
