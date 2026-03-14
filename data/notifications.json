@@ -1,18 +1,18 @@
 [
   {
+    "id": "notif-0fb9bf48-1763-4364-8e1c-1754dc382b99",
+    "title": "testing after implementing HMAC-SHA256",
+    "description": "",
+    "date": "2026-03-14",
+    "important": false,
+    "attachments": []
+  },
+  {
     "id": "notif-e955a67f-756f-4b37-9c22-6335e529e6b1",
     "title": "endsem cazzed",
     "description": "🎉🎉🎉",
     "date": "2026-03-13",
     "important": true,
-    "attachments": []
-  },
-  {
-    "id": "notif-3f683403-374c-4a5f-91d1-46c9d302524d",
-    "title": "test 7",
-    "description": "",
-    "date": "2026-03-13",
-    "important": false,
     "attachments": []
   },
   {
