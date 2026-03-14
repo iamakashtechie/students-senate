@@ -59,7 +59,7 @@ export default function NotificationCard({ notification, showFull = false }) {
           {attachments.map((att, i) => (
             <a
               key={i}
-              href={att.url}
+              href={`/api/download?url=${encodeURIComponent(att.url)}&filename=${encodeURIComponent(att.name)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-xs font-display font-bold uppercase tracking-widest text-primary border-2 border-primary bg-cream px-3 py-1.5 hover:-translate-y-1 hover:shadow-[2px_2px_0_0_#111] transition-all"

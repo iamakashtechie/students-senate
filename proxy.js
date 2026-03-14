@@ -14,9 +14,11 @@ export function proxy(request) {
   }
 
   // exclude the login page itself and the login API
+  // allow public API routes
   if (
-    pathname === "/admin/login" ||
     pathname === "/api/admin/login" ||
+    pathname === "/api/download" ||
+    (pathname === "/api/notifications" && request.method === "GET") ||
     pathname.includes("/api/public/") // if any exist in the future
   ) {
     return NextResponse.next();
