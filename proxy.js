@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { validateSession } from "@/lib/sessions";
 
-// protect /admin and all /api/ routes EXCEPT /api/admin/login
+// protect /admin and all /api/ routes EXCEPT public ones
 export function proxy(request) {
   const { pathname } = request.nextUrl;
 
@@ -13,13 +13,13 @@ export function proxy(request) {
     return NextResponse.next();
   }
 
-  // exclude the login page itself and the login API
-  // allow public API routes
+  // allow public pages and API routes
   if (
+    pathname === "/admin/login" ||
     pathname === "/api/admin/login" ||
     pathname === "/api/download" ||
     (pathname === "/api/notifications" && request.method === "GET") ||
-    pathname.includes("/api/public/") // if any exist in the future
+    pathname.includes("/api/public/")
   ) {
     return NextResponse.next();
   }
@@ -45,12 +45,6 @@ export function proxy(request) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
     "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };

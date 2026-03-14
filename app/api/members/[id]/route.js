@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { deleteMember } from "@/lib/dataStore";
 import { validateSession } from "@/lib/sessions";
+import { revalidatePath } from "next/cache";
 
 // delete a member by id from any section
 export async function DELETE(request, { params }) {
@@ -12,6 +13,7 @@ export async function DELETE(request, { params }) {
     if (!deleted) {
       return NextResponse.json({ error: "not found" }, { status: 404 });
     }
+    revalidatePath("/", "layout");
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Failed to delete member:", err);

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { getMembers, addMember } from "@/lib/dataStore";
 import { validateSession } from "@/lib/sessions";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   return NextResponse.json(await getMembers());
@@ -43,6 +44,7 @@ export async function POST(request) {
 
   try {
     const created = await addMember(newMember);
+    revalidatePath("/", "layout");
     return NextResponse.json(created, { status: 201 });
   } catch (err) {
     console.error("Failed to save member:", err);

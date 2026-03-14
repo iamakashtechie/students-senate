@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 
-// Configure cloudinary explicitly here since it might run in Edge or Serverless functions
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -9,6 +8,16 @@ cloudinary.config({
   secure: true,
 });
 
+/**
+ * Proxy route for file downloads.
+ *
+ * - Cloudinary /raw/upload/ files (PDFs): authenticated via private_download_url
+ * - Cloudinary /image/upload/ files (images): served directly (they are public)
+ * - Cloudinary /image/upload/ with .pdf extension: these are corrupted legacy
+ *   uploads; we redirect the browser to the URL directly so at least it doesn't
+ *   show a 500, and show a browser-level error instead.
+ * - Other external URLs: proxied directly
+ */
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const url = searchParams.get("url");
@@ -19,62 +28,66 @@ export async function GET(request) {
   }
 
   try {
-    // Determine if we need to format the filename based on the URL type
     let finalName = filename;
-    
     let fetchUrl = url;
 
-    // Check if it's a Cloudinary raw file (PDFs)
-    const isCloudinaryPDF = url.includes("cloudinary.com") && url.includes("/raw/upload/");
-    if (isCloudinaryPDF) {
-      if (!finalName.toLowerCase().endsWith(".pdf")) {
-        finalName = `${finalName}.pdf`;
-      }
-      
-      // Extract the public_id from the Cloudinary URL
-      // Format: https://res.cloudinary.com/.../raw/upload/v1234567890/folder/filename.ext
-      try {
-        const urlParts = new URL(url).pathname.split("/upload/")[1].split("/");
-        // Remove version number if present (starts with 'v' followed by numbers)
-        if (urlParts[0].match(/^v\d+$/)) {
-          urlParts.shift();
-        }
-        const publicId = urlParts.join("/");
-        
-        // Generate an authenticated download URL using our server secrets
-        fetchUrl = cloudinary.utils.private_download_url(
-          publicId, 
-          "", // format not needed for raw
-          { type: "upload", resource_type: "raw" }
-        );
-      } catch (e) {
-        console.error("Failed to parse Cloudinary URL", e);
-      }
-    }
+    const isCloudinary = url.includes("cloudinary.com");
+    const isCloudinaryImagePdf =
+      isCloudinary &&
+      url.includes("/image/upload/") &&
+      url.toLowerCase().includes(".pdf");
 
-    // Fetch the file from the external URL using the authenticated link if needed
+    if (isCloudinary && url.includes("/raw/upload/")) {
+      // Raw PDF uploads — need authenticated access
+      if (!finalName.toLowerCase().endsWith(".pdf")) finalName += ".pdf";
+
+      const afterUpload = new URL(url).pathname.split("/upload/")[1];
+      const parts = afterUpload.split("/");
+      // Strip version segment (e.g. v1234567890)
+      if (parts[0]?.match(/^v\d+$/)) parts.shift();
+      const publicId = parts.join("/");
+
+      fetchUrl = cloudinary.utils.private_download_url(publicId, "", {
+        type: "upload",
+        resource_type: "raw",
+      });
+    }
+    // Legacy PDFs might exist as /image/upload/...pdf URLs. These often require
+    // signed download URLs on Cloudinary and return 401 if fetched directly.
+    if (isCloudinaryImagePdf) {
+      if (!finalName.toLowerCase().endsWith(".pdf")) finalName += ".pdf";
+
+      const afterUpload = new URL(url).pathname.split("/upload/")[1];
+      const parts = afterUpload.split("/");
+      if (parts[0]?.match(/^v\d+$/)) parts.shift();
+
+      // Cloudinary image public IDs for PDFs are typically stored without the .pdf suffix.
+      const imagePublicId = parts.join("/").replace(/\.pdf$/i, "");
+
+      fetchUrl = cloudinary.utils.private_download_url(imagePublicId, "pdf", {
+        type: "upload",
+        resource_type: "image",
+      });
+    }
+    // For /image/upload/ URLs (images), use the URL directly.
+    // Cloudinary images are publicly accessible without authentication.
+
     const response = await fetch(fetchUrl);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch file: ${response.status} ${response.statusText}`);
+      throw new Error(`Upstream ${response.status}: ${response.statusText}`);
     }
 
-    // Create a streaming response
     const headers = new Headers();
-    headers.set("Content-Type", response.headers.get("content-type") || "application/octet-stream");
-    
-    // Force download with the correct filename
+    headers.set(
+      "Content-Type",
+      response.headers.get("content-type") || "application/octet-stream"
+    );
     headers.set("Content-Disposition", `attachment; filename="${finalName}"`);
 
-    return new NextResponse(response.body, {
-      status: 200,
-      headers,
-    });
+    return new NextResponse(response.body, { status: 200, headers });
   } catch (error) {
     console.error("Download proxy error:", error);
-    return NextResponse.json(
-      { error: "Failed to download file" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to download file" }, { status: 500 });
   }
 }
