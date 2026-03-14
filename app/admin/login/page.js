@@ -28,9 +28,8 @@ export default function AdminLoginPage() {
         return;
       }
       
-      // on success, middleware allows us to go to the admin page
-      router.push("/admin");
-      router.refresh();
+      // on success, hard redirect to bypass Next.js client route cache
+      window.location.href = "/admin";
       
     } catch {
       setError("network error, try again.");
