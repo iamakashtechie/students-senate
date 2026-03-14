@@ -1,8 +1,9 @@
 // path: app/api/notifications/route.js
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import { getNotifications, saveNotifications } from "@/lib/dataStore";
+import { getNotifications, addNotification } from "@/lib/dataStore";
 import { validateSession } from "@/lib/sessions";
+import { uploadBuffer } from "@/lib/upload";
 
 // get all notifications sorted newest first
 export async function GET() {
@@ -56,21 +57,23 @@ export async function POST(request) {
       }
 
       const buffer = Buffer.from(await file.arrayBuffer());
-      const filename = `${uuidv4()}.${ext}`;
-      const filePath = `public/uploads/${filename}`;
+      
+      try {
+        // Upload the file directly to Cloudinary
+        const secureUrl = await uploadBuffer(buffer, file.name);
 
-      // write file to public directory
-      const fs = await import("fs");
-      const path = await import("path");
-      const dir = path.join(process.cwd(), "public", "uploads");
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(path.join(dir, filename), buffer);
-
-      attachments.push({
-        name: file.name,
-        url: `/uploads/${filename}`,
-        type: ["pdf"].includes(ext) ? "pdf" : "image",
-      });
+        attachments.push({
+          name: file.name,
+          url: secureUrl,
+          type: ["pdf"].includes(ext) ? "pdf" : "image",
+        });
+      } catch (uploadError) {
+        console.error("Failed to upload attachment:", uploadError);
+        return NextResponse.json(
+          { error: "failed to upload attachment to cloud storage" },
+          { status: 500 },
+        );
+      }
     }
   }
 
@@ -83,13 +86,11 @@ export async function POST(request) {
     attachments,
   };
 
-  const notifications = await getNotifications();
-  notifications.unshift(notification);
   try {
-    await saveNotifications(notifications);
-  } catch {
+    const created = await addNotification(notification);
+    return NextResponse.json(created, { status: 201 });
+  } catch (err) {
+    console.error("Failed to save notification:", err);
     return NextResponse.json({ error: "failed to save notification" }, { status: 500 });
   }
-
-  return NextResponse.json(notification, { status: 201 });
 }

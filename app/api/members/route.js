@@ -1,7 +1,7 @@
 // path: app/api/members/route.js
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import { getMembers, saveMembers } from "@/lib/dataStore";
+import { getMembers, addMember } from "@/lib/dataStore";
 import { validateSession } from "@/lib/sessions";
 
 export async function GET() {
@@ -38,23 +38,14 @@ export async function POST(request) {
     year: year || "",
     linkedIn: linkedIn || "",
     profilePic: profilePic || "",
+    section: section || "generalCouncil",
   };
 
-  const members = await getMembers();
-
-  // section determines which list to append to
-  if (section === "professors") {
-    members.professors.push(newMember);
-  } else if (section === "executiveSecretariat") {
-    members.executiveSecretariat.push(newMember);
-  } else {
-    members.generalCouncil.push(newMember);
-  }
-
   try {
-    await saveMembers(members);
-  } catch {
+    const created = await addMember(newMember);
+    return NextResponse.json(created, { status: 201 });
+  } catch (err) {
+    console.error("Failed to save member:", err);
     return NextResponse.json({ error: "failed to save member" }, { status: 500 });
   }
-  return NextResponse.json(newMember, { status: 201 });
 }
