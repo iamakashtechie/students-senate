@@ -1,13 +1,58 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+
+async function getApiErrorMessage(res, fallback) {
+  try {
+    const data = await res.json();
+    if (typeof data?.error === "string" && data.error.trim()) return data.error;
+    if (typeof data?.message === "string" && data.message.trim()) return data.message;
+  } catch {
+    // ignore non-json responses and fall back to a generic message
+  }
+  return fallback;
+}
 
 // admin panel is fully client-side but protected by middleware
 // authentication happens via http-only cookies
 export default function AdminPage() {
   const [tab, setTab] = useState("notifications");
+  const [toast, setToast] = useState({
+    visible: false,
+    type: "success",
+    message: "",
+  });
+  const toastTimeoutRef = useRef(null);
   const router = useRouter();
+
+  function showToast(type, message) {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = null;
+    }
+
+    setToast({ visible: true, type, message });
+
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast((prev) => ({ ...prev, visible: false }));
+      toastTimeoutRef.current = null;
+    }, 4000);
+  }
+
+  function closeToast() {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = null;
+    }
+    setToast((prev) => ({ ...prev, visible: false }));
+  }
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    };
+  }, []);
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -18,15 +63,61 @@ export default function AdminPage() {
   // helper to pass to panels so they can intercept 401s if the session expires mid-edit
   function handleApiError(res) {
     if (res.status === 401) {
-      router.push("/admin/login");
-      router.refresh();
+      showToast("error", "Session expired. Redirecting to login...");
+      setTimeout(() => {
+        router.push("/admin/login");
+        router.refresh();
+      }, 700);
       return true;
     }
     return false;
   }
 
+  const toastTypeStyles = {
+    success: "bg-cream border-primary text-primary",
+    error: "bg-accent border-primary text-primary",
+    info: "bg-secondary border-primary text-primary",
+  };
+
+  const toastLabel = {
+    success: "Success",
+    error: "Error",
+    info: "Info",
+  };
+
   return (
     <div className="min-h-screen pt-16 bg-cream">
+      <div
+        className={`fixed top-24 right-4 md:right-8 z-[70] w-[calc(100vw-2rem)] max-w-md transition-all duration-300 ease-out ${
+          toast.visible
+            ? "translate-x-0 opacity-100"
+            : "translate-x-full opacity-0 pointer-events-none"
+        }`}
+      >
+        <div
+          className={`border-4 shadow-[8px_8px_0_0_#111] p-4 ${toastTypeStyles[toast.type] || toastTypeStyles.info}`}
+          role="status"
+          aria-live="polite"
+          aria-hidden={!toast.visible}
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="font-display font-black text-xs uppercase tracking-widest mb-1">
+                {toastLabel[toast.type] || "Notice"}
+              </p>
+              <p className="font-body text-sm font-semibold break-words">{toast.message}</p>
+            </div>
+            <button
+              onClick={closeToast}
+              className="font-display font-black text-xs uppercase tracking-widest border-2 border-primary px-2 py-1 hover:bg-primary hover:text-cream transition-colors"
+              aria-label="Close notification"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* admin topbar */}
       <div className="bg-primary text-cream px-8 py-4 flex items-center justify-between border-b-4 border-primary-dark">
         <div>
@@ -68,16 +159,20 @@ export default function AdminPage() {
 
       {/* tab content */}
       <div className="max-w-6xl mx-auto px-8 py-10">
-        {tab === "notifications" && <NotificationsPanel onApiError={handleApiError} />}
-        {tab === "resolution" && <ResolutionPanel onApiError={handleApiError} />}
-        {tab === "members" && <MembersPanel onApiError={handleApiError} />}
+        {tab === "notifications" && (
+          <NotificationsPanel onApiError={handleApiError} showToast={showToast} />
+        )}
+        {tab === "resolution" && (
+          <ResolutionPanel onApiError={handleApiError} showToast={showToast} />
+        )}
+        {tab === "members" && <MembersPanel onApiError={handleApiError} showToast={showToast} />}
       </div>
     </div>
   );
 }
 
 /* notifications management panel */
-function NotificationsPanel({ onApiError }) {
+function NotificationsPanel({ onApiError, showToast }) {
   const [notifications, setNotifications] = useState([]);
   const [form, setForm] = useState({
     title: "",
@@ -87,7 +182,6 @@ function NotificationsPanel({ onApiError }) {
   });
   const [files, setFiles] = useState([]);
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     fetch("/api/notifications")
@@ -104,7 +198,6 @@ function NotificationsPanel({ onApiError }) {
   async function handleAdd(e) {
     e.preventDefault();
     setSaving(true);
-    setMsg("");
 
     const fd = new FormData();
     fd.append("title", form.title);
@@ -118,15 +211,22 @@ function NotificationsPanel({ onApiError }) {
       body: fd,
     });
 
-    if (onApiError(res)) return;
+    if (onApiError(res)) {
+      setSaving(false);
+      return;
+    }
 
     if (res.ok) {
-      setMsg("notification added.");
+      showToast("success", "Notification created successfully.");
       setForm({ title: "", description: "", date: "", important: false });
       setFiles([]);
-      loadNotifications();
+      await loadNotifications();
     } else {
-      setMsg("failed to add notification.");
+      const errorMessage = await getApiErrorMessage(
+        res,
+        "Failed to create notification."
+      );
+      showToast("error", errorMessage);
     }
     setSaving(false);
   }
@@ -140,10 +240,15 @@ function NotificationsPanel({ onApiError }) {
     if (onApiError(res)) return;
     
     if (!res.ok) {
-      setMsg("failed to delete notification.");
+      const errorMessage = await getApiErrorMessage(
+        res,
+        "Failed to delete notification."
+      );
+      showToast("error", errorMessage);
       return;
     }
-    loadNotifications();
+    showToast("success", "Notification deleted successfully.");
+    await loadNotifications();
   }
 
   return (
@@ -226,7 +331,6 @@ function NotificationsPanel({ onApiError }) {
             >
               {saving ? "saving..." : "Add Notification"}
             </button>
-            {msg && <p className="font-body text-xs text-accent">{msg}</p>}
           </div>
         </form>
       </div>
@@ -280,11 +384,10 @@ function NotificationsPanel({ onApiError }) {
 }
 
 /* resolution management panel */
-function ResolutionPanel({ onApiError }) {
+function ResolutionPanel({ onApiError, showToast }) {
   const [text, setText] = useState("");
   const [year, setYear] = useState("2025-26");
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     fetch("/api/resolution")
@@ -298,16 +401,23 @@ function ResolutionPanel({ onApiError }) {
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
-    setMsg("");
     const res = await fetch("/api/resolution", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, year }),
     });
     
-    if (onApiError(res)) return;
+    if (onApiError(res)) {
+      setSaving(false);
+      return;
+    }
     
-    setMsg(res.ok ? "resolution updated." : "failed to update.");
+    if (res.ok) {
+      showToast("success", "Resolution updated successfully.");
+    } else {
+      const errorMessage = await getApiErrorMessage(res, "Failed to update resolution.");
+      showToast("error", errorMessage);
+    }
     setSaving(false);
   }
 
@@ -348,7 +458,6 @@ function ResolutionPanel({ onApiError }) {
           >
             {saving ? "saving..." : "Save Resolution"}
           </button>
-          {msg && <p className="font-body text-xs text-accent">{msg}</p>}
         </div>
       </form>
     </div>
@@ -356,7 +465,7 @@ function ResolutionPanel({ onApiError }) {
 }
 
 /* members management panel */
-function MembersPanel({ onApiError }) {
+function MembersPanel({ onApiError, showToast }) {
   const [members, setMembers] = useState({
     professors: [],
     executiveSecretariat: [],
@@ -371,7 +480,6 @@ function MembersPanel({ onApiError }) {
     year: "",
   });
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     fetch("/api/members")
@@ -388,21 +496,24 @@ function MembersPanel({ onApiError }) {
   async function handleAdd(e) {
     e.preventDefault();
     setSaving(true);
-    setMsg("");
     const res = await fetch("/api/members", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form, section }),
     });
     
-    if (onApiError(res)) return;
+    if (onApiError(res)) {
+      setSaving(false);
+      return;
+    }
     
     if (res.ok) {
-      setMsg("member added.");
+      showToast("success", "Member created successfully.");
       setForm({ name: "", rollNo: "", role: "", department: "", year: "" });
-      loadMembers();
+      await loadMembers();
     } else {
-      setMsg("failed to add member.");
+      const errorMessage = await getApiErrorMessage(res, "Failed to create member.");
+      showToast("error", errorMessage);
     }
     setSaving(false);
   }
@@ -416,10 +527,12 @@ function MembersPanel({ onApiError }) {
     if (onApiError(res)) return;
     
     if (!res.ok) {
-      setMsg("failed to remove member.");
+      const errorMessage = await getApiErrorMessage(res, "Failed to remove member.");
+      showToast("error", errorMessage);
       return;
     }
-    loadMembers();
+    showToast("success", "Member removed successfully.");
+    await loadMembers();
   }
 
   // all members flat list for display
@@ -523,7 +636,6 @@ function MembersPanel({ onApiError }) {
             >
               {saving ? "saving..." : "Add Member"}
             </button>
-            {msg && <p className="font-body text-xs text-accent">{msg}</p>}
           </div>
         </form>
       </div>
